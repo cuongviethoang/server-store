@@ -1,0 +1,82 @@
+package com.project.ensureQuality.controller;
+
+import com.project.ensureQuality.model.Customer;
+import com.project.ensureQuality.payload.response.MessageResponse;
+import com.project.ensureQuality.security.services.CustomerService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
+
+@CrossOrigin(origins = "*", maxAge = 3600)
+@RestController
+@RequestMapping("/api")
+public class CustomerController {
+
+    @Autowired
+    CustomerService customerService;
+
+    @PostMapping("/customer/create")
+    public ResponseEntity<?> addNewCustomer(@RequestBody Customer customer) {
+        try {
+            if(customer.getPhoneNumber() == "" || customer.getPhoneNumber() == null){
+                return ResponseEntity.status(400).body(new MessageResponse("Lỗi: Số điện thoại là bắt buộc", 1));
+            }
+
+            MessageResponse message = customerService.addNewCustomer(customer);
+            if(message.getEC() == 0){
+                return ResponseEntity.status(200).body(message);
+            }
+
+            return ResponseEntity.status(400).body(message);
+
+        } catch (Exception e){
+            System.out.println(e);
+            return ResponseEntity.status(500).body(new MessageResponse("Lỗi: Error server", -1));
+        }
+    }
+
+    @GetMapping("/customer/read")
+    public ResponseEntity<?> getAllCustomer(@RequestParam int page, @RequestParam int limit) {
+        try {
+            List<Customer> customers = customerService.getAllCustomer(page, limit);
+            return ResponseEntity.status(200).body(customers);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new MessageResponse("Error server", -1));
+        }
+    }
+
+    @GetMapping("/customer/{cusId}")
+    public ResponseEntity<?> getDetailCustomer(@PathVariable(value = "cusId") int cusId) {
+        try {
+            Customer customer = customerService.getDetailCustomer(cusId);
+            return  ResponseEntity.status(200).body(customer);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new MessageResponse("Error server", -1));
+        }
+    }
+
+    @PutMapping("/customer/update")
+    public ResponseEntity<?> updateCustomer(@RequestBody Customer customer){
+        try {
+            if(customer.getPhoneNumber() == "" || customer.getPhoneNumber() == null){
+                return ResponseEntity.status(400).body(new MessageResponse("Lỗi: Số điện thoại là bắt buộc", 1));
+            }
+
+            MessageResponse message = customerService.updateCustomer(customer);
+            if(message.getEC() == 0){
+                return ResponseEntity.status(200).body(message);
+            }
+
+            return ResponseEntity.status(400).body(message);
+        } catch (Exception e){
+            System.out.println(e);
+            return ResponseEntity.status(500).body(new MessageResponse("Lỗi: Error server",-1));
+        }
+    }
+}

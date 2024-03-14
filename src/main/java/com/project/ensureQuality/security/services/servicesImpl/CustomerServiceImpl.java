@@ -55,4 +55,14 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer getDetailCustomer(int cusId) {
         return customerRepository.findById(cusId).orElseThrow(() -> new RuntimeException("Không thể tải chi tiết người dùng, vui lòng thử lại"));
     }
+
+    @Override
+    public int getAllCusNum() {
+        try {
+            List<Customer> customers = customerRepository.findAll();
+            return customers.size();
+        } catch (Exception e) {
+            return 0;
+        }
+    }
 }

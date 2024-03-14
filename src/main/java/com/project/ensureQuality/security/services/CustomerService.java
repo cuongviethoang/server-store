@@ -14,4 +14,6 @@ public interface CustomerService {
     List<Customer> getAllCustomer(int page, int limit);
 
     Customer getDetailCustomer(int cusId);
+
+    int getAllCusNum();
 }

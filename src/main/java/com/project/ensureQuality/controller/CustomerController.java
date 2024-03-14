@@ -62,6 +62,17 @@ public class CustomerController {
     }
 
     @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
+    @GetMapping("/customer/read-all-number")
+    public ResponseEntity<?> getAllCusNum(){
+        try {
+            int count = customerService.getAllCusNum();
+            return ResponseEntity.status(200).body(count);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new MessageResponse("Không tải đợc số lượng khách hàng", -1));
+        }
+    }
+
+    @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
     @PutMapping("/customer/update")
     public ResponseEntity<?> updateCustomer(@RequestBody Customer customer){
         try {

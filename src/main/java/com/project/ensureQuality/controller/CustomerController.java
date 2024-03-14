@@ -3,17 +3,14 @@ package com.project.ensureQuality.controller;
 import com.project.ensureQuality.model.Customer;
 import com.project.ensureQuality.payload.response.MessageResponse;
 import com.project.ensureQuality.security.services.CustomerService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
+
+@CrossOrigin(allowCredentials = "true")
 @RestController
 @RequestMapping("/api")
 public class CustomerController {
@@ -21,6 +18,7 @@ public class CustomerController {
     @Autowired
     CustomerService customerService;
 
+    @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
     @PostMapping("/customer/create")
     public ResponseEntity<?> addNewCustomer(@RequestBody Customer customer) {
         try {
@@ -41,6 +39,7 @@ public class CustomerController {
         }
     }
 
+    @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
     @GetMapping("/customer/read")
     public ResponseEntity<?> getAllCustomer(@RequestParam int page, @RequestParam int limit) {
         try {
@@ -51,6 +50,7 @@ public class CustomerController {
         }
     }
 
+    @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
     @GetMapping("/customer/{cusId}")
     public ResponseEntity<?> getDetailCustomer(@PathVariable(value = "cusId") int cusId) {
         try {
@@ -61,6 +61,7 @@ public class CustomerController {
         }
     }
 
+    @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
     @PutMapping("/customer/update")
     public ResponseEntity<?> updateCustomer(@RequestBody Customer customer){
         try {

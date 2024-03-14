@@ -78,4 +78,14 @@ public class ProductServicesImpl implements ProductService {
     public Optional<Product> getProductById(Integer productId) {
         return Optional.of(productRepository.findById(productId)).get();
     }
+
+    @Override
+    public int getAllNumberProducts() {
+        try {
+            List<Product> products = productRepository.findAll();
+            return products.size();
+        } catch (Exception e) {
+            return 0;
+        }
+    }
 }

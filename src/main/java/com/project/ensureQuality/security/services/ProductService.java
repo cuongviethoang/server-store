@@ -19,4 +19,6 @@ public interface ProductService {
     byte[] getQrCodeByProductId(Integer productId) throws SQLException;
 
     Optional<Product> getProductById(Integer productId);
+
+    int getAllNumberProducts();
 }

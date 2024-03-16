@@ -15,4 +15,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 
     @Query("select c from Customer c order by c.id asc limit ?2 offset ?1")
     List<Customer> getCustomersWithPagination(int offset, int limit);
+
+    @Query("select c from Customer c where c.username like %:q% or c.phoneNumber like %:q%")
+    List<Customer> getListCusByValueSearch(String q);
 }

@@ -62,6 +62,7 @@ public class WebSecurityConfig {
                         auth.requestMatchers("/api/auth/**").permitAll()
                                 .requestMatchers("/api/group/**").permitAll()
                                 .requestMatchers("/api/product/read-all").permitAll()
+                                .requestMatchers("/api/product/read-all-number").permitAll()
                                 .anyRequest().authenticated()
                 );
 

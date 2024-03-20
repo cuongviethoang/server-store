@@ -21,7 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
+
+@CrossOrigin(allowCredentials = "true")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -30,6 +31,7 @@ public class ProductController {
     @Autowired
     ProductService productService;
 
+    @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
     @PostMapping("/product/create")
     public ResponseEntity<?> addNewProduct(Authentication authentication,  @RequestParam("productName") String productName,
                                            @RequestParam("productImage") MultipartFile productImage,
@@ -45,6 +47,18 @@ public class ProductController {
         return ResponseEntity.status(200).body(productResponse);
     }
 
+    @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
+    @GetMapping("/product/read-all-number")
+    public ResponseEntity<?> getAllNumberProduct() {
+        try {
+            int leng = productService.getAllNumberProducts();
+            return ResponseEntity.status(200).body(leng);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new MessageResponse("Error server", -1));
+        }
+    }
+
+    @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
     @GetMapping("/product/read-all")
     public ResponseEntity<?> getAllProducts(@RequestParam int page, @RequestParam int limit) throws SQLException {
         List<Product> products = productService.getAllProducts(page, limit);
@@ -64,6 +78,7 @@ public class ProductController {
         return ResponseEntity.status(200).body(productResponses);
     }
 
+    @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
     @GetMapping("/product/{proId}")
     public ResponseEntity<?> getDetailProduct(@PathVariable(value = "proId") int proId) {
         try {

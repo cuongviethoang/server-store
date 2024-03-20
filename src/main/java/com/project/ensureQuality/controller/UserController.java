@@ -6,7 +6,6 @@ import com.project.ensureQuality.payload.response.UserInfoResponse;
 import com.project.ensureQuality.security.services.UserDetailsImpl;
 import com.project.ensureQuality.security.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,7 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
+
+@CrossOrigin(allowCredentials = "true")
 @RestController
 @RequestMapping("/api")
 public class UserController {
@@ -24,6 +24,7 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
     @PreAuthorize("hasRole('MANAGER')")
     @GetMapping("/user/read")
     public ResponseEntity<?> getUsersWithPagination(@RequestParam int page, @RequestParam int limit) {
@@ -35,6 +36,7 @@ public class UserController {
         }
     }
 
+    @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
     @PreAuthorize("hasRole('MANAGER')")
     @PostMapping("/user/create")
     public ResponseEntity<?> addNewUser(@RequestBody User user) {
@@ -49,6 +51,7 @@ public class UserController {
         }
     }
 
+    @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
     @PreAuthorize("hasRole('MANAGER')")
     @DeleteMapping("/user/delete/{userId}")
     public ResponseEntity<?> deleteUser(@PathVariable(value = "userId") int userId) {
@@ -63,6 +66,7 @@ public class UserController {
         }
     }
 
+    @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
     @PostMapping("/user/account")
     public ResponseEntity<?> getUserAccount(Authentication authentication) {
         try {

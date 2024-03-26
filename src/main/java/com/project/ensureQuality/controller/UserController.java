@@ -37,6 +37,17 @@ public class UserController {
     }
 
     @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
+    @GetMapping("/user/read-user-number")
+    public ResponseEntity<?> getAllUserNum() {
+        try {
+            int count = userService.getAllUserNum();
+            return ResponseEntity.status(200).body(count);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new MessageResponse("Không thể tải số lượng người dùng", -1));
+        }
+    }
+
+    @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
     @PreAuthorize("hasRole('MANAGER')")
     @PostMapping("/user/create")
     public ResponseEntity<?> addNewUser(@RequestBody User user) {

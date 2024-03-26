@@ -25,6 +25,14 @@ public class ProductResponse {
         this.total = total;
     }
 
+    public ProductResponse(Integer id, String productName, byte[] productImage, float price, int total) {
+        this.id = id;
+        this.productName = productName;
+        this.productImage = productImage != null ? Base64.encodeBase64String(productImage) : null;
+        this.price = price;
+        this.total = total;
+    }
+
     public ProductResponse(Integer id, String productName, byte[] productImage, byte[] qrCode, float price, int total) {
         this.id = id;
         this.productName = productName;

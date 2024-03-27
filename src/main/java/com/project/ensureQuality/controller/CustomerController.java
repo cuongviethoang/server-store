@@ -1,6 +1,7 @@
 package com.project.ensureQuality.controller;
 
 import com.project.ensureQuality.model.Customer;
+import com.project.ensureQuality.payload.response.CustomerResponse;
 import com.project.ensureQuality.payload.response.MessageResponse;
 import com.project.ensureQuality.security.services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +63,17 @@ public class CustomerController {
     }
 
     @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
+    @GetMapping("/customer/read-all-number")
+    public ResponseEntity<?> getAllCusNum(){
+        try {
+            int count = customerService.getAllCusNum();
+            return ResponseEntity.status(200).body(count);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new MessageResponse("Không tải đợc số lượng khách hàng", -1));
+        }
+    }
+
+    @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
     @PutMapping("/customer/update")
     public ResponseEntity<?> updateCustomer(@RequestBody Customer customer){
         try {
@@ -78,6 +90,18 @@ public class CustomerController {
         } catch (Exception e){
             System.out.println(e);
             return ResponseEntity.status(500).body(new MessageResponse("Lỗi: Error server",-1));
+        }
+    }
+
+    @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
+    @GetMapping("/customer/search")
+    public ResponseEntity<?> getSearchListCustomer(@RequestParam String q, @RequestParam int currentPage) {
+        try {
+            CustomerResponse customerResponse = customerService.getListCusWhenSearch(q, currentPage);
+
+            return ResponseEntity.status(200).body(customerResponse);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new MessageResponse("Lỗi server", -1));
         }
     }
 }

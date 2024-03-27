@@ -65,13 +65,10 @@ public class ProductController {
         List<ProductResponse> productResponses = new ArrayList<>();
         for(Product p : products){
             byte[] photoBytesProductImg = productService.getProductImageByProductId(p.getId());
-            byte[] photoBytesQrCode = productService.getQrCodeByProductId(p.getId());
-            if(photoBytesProductImg != null && photoBytesProductImg.length > 0 && photoBytesQrCode != null && photoBytesQrCode.length > 0) {
+            if(photoBytesProductImg != null && photoBytesProductImg.length > 0) {
                 String base64Photo1 = Base64.encodeBase64String(photoBytesProductImg);
-                String base64Photo2 = Base64.encodeBase64String(photoBytesQrCode);
-                ProductResponse productResponse = getProductResponse(p);
+                ProductResponse productResponse = getProductResponseNotQr(p);
                 productResponse.setProductImage(base64Photo1);
-                productResponse.setQrCode(base64Photo2);
                 productResponses.add(productResponse);
             }
         }
@@ -121,5 +118,18 @@ public class ProductController {
             }
         }
         return new ProductResponse(product.getId(), product.getProductName(), photoBytes1, photoBytes2, product.getPrice(), product.getTotal());
+    }
+
+    private ProductResponse getProductResponseNotQr(Product product) {
+        byte[] photoBytes1 = null;
+        Blob productImage = product.getProductImage();
+        if(productImage != null) {
+            try {
+                photoBytes1 = productImage.getBytes(1, (int) productImage.length());
+            } catch (SQLException e) {
+                throw  new PhotoRetrievaException("Lỗi truy xuất ảnh");
+            }
+        }
+        return new ProductResponse(product.getId(), product.getProductName(),photoBytes1, product.getPrice(), product.getTotal());
     }
 }

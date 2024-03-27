@@ -1,5 +1,6 @@
 package com.project.ensureQuality.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,6 +20,7 @@ public class Order {
     private String code;
 
     @Column(name = "created")
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
     private Date createTime = new Date();
 
     @ManyToOne

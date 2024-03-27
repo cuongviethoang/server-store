@@ -3,12 +3,15 @@ package com.project.ensureQuality.controller;
 import com.project.ensureQuality.exception.PhotoRetrievaException;
 import com.project.ensureQuality.model.ItemOrder;
 import com.project.ensureQuality.model.Order;
+import com.project.ensureQuality.model.Payment;
 import com.project.ensureQuality.model.Product;
 import com.project.ensureQuality.payload.response.ItemOrderResponse;
+import com.project.ensureQuality.payload.response.MessageResponse;
 import com.project.ensureQuality.payload.response.OrderResponse;
 import com.project.ensureQuality.payload.response.ProductResponse;
 import com.project.ensureQuality.security.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +25,19 @@ import java.util.List;
 public class OrderController {
     @Autowired
     OrderService orderService;
+
+    @PostMapping("/order/create")
+    public ResponseEntity<?> addNewOrder(@RequestBody Order order) {
+        try {
+            MessageResponse messageResponse = orderService.addNewOrder(order);
+            if(messageResponse.getEC() == 0){
+                return ResponseEntity.status(200).body(messageResponse);
+            }
+            return ResponseEntity.status(400).body(messageResponse);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new MessageResponse("Error server", -1));
+        }
+    }
 
     @GetMapping("/order-all")
     public List<OrderResponse> getAllOrder(){

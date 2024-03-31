@@ -13,6 +13,4 @@ public interface OrderService {
     List<Order> getAllOrder();
 
     Order getOrderById(int order_id);
-
-    PaginationItemOrderResponse getAllItemOrderOfOrder(int orderId, int limit);
 }

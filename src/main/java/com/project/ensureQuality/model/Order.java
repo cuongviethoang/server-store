@@ -1,5 +1,6 @@
 package com.project.ensureQuality.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,6 +30,7 @@ public class Order {
             mappedBy = "order",
             cascade = CascadeType.ALL
     )
+    @JsonIgnore
     private List<ItemOrder> itemOrders;
 
     @OneToOne(

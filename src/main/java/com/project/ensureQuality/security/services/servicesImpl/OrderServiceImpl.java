@@ -45,30 +45,5 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.findById(order_id).orElse(new Order());
     }
 
-    @Override
-    public PaginationItemOrderResponse getAllItemOrderOfOrder(int orderId, int limit) {
-        try {
-            Order order = orderRepository.findById(orderId).get();
-            List<ItemOrder> itemOrders = order.getItemOrders();
-            PaginationItemOrderResponse paginationItemOrderResponse = new PaginationItemOrderResponse();
-            paginationItemOrderResponse.setTotal_item(itemOrders.size());
-            paginationItemOrderResponse.setPer_page(10);
-
-            int total_page = (int) Math.ceil((double) itemOrders.size() / 10);
-            paginationItemOrderResponse.setTotal_page(total_page);
-
-            if(limit * 10 > itemOrders.size()) {
-                paginationItemOrderResponse.setData(itemOrders.subList((limit-1)*10, itemOrders.size()));
-            }
-            else {
-                paginationItemOrderResponse.setData(itemOrders.subList((limit-1)*10, limit*10));
-            }
-            return paginationItemOrderResponse;
-        } catch (Exception e) {
-            return null;
-        }
-
-    }
-
 
 }

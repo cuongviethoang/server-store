@@ -6,6 +6,7 @@ import com.project.ensureQuality.model.Order;
 import com.project.ensureQuality.model.Payment;
 import com.project.ensureQuality.model.Product;
 import com.project.ensureQuality.payload.response.*;
+import com.project.ensureQuality.repository.OrderRepository;
 import com.project.ensureQuality.security.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,9 @@ import java.util.List;
 public class OrderController {
     @Autowired
     OrderService orderService;
+
+    @Autowired
+    OrderRepository orderRepository;
 
     @PostMapping("/order/create")
     public ResponseEntity<?> addNewOrder(@RequestBody Order order) {
@@ -65,9 +69,26 @@ public class OrderController {
     }
 
     @GetMapping("/order/list-item-order/{orderId}")
-    public ResponseEntity<?> getListItemOrderOfOrder(@PathVariable(value = "orderId") int orderId, @RequestParam int currentPage) {
+    public ResponseEntity<?> getListItemOrderOfOrder(@PathVariable(value = "orderId") int orderId, @RequestParam int limit) {
         try {
-            PaginationItemOrderResponse paginationItemOrderResponse = orderService.getAllItemOrderOfOrder(orderId, currentPage);
+//            PaginationItemOrderResponse paginationItemOrderResponse = orderService.getAllItemOrderOfOrder(orderId, currentPage);
+            Order order = orderRepository.findById(orderId).get();
+            List<ItemOrderResponse> itemOrders = getItemOrderResponse(order.getItemOrders());
+            PaginationItemOrderResponse paginationItemOrderResponse = new PaginationItemOrderResponse();
+            paginationItemOrderResponse.setTotal_item(itemOrders.size());
+            paginationItemOrderResponse.setPer_page(10);
+
+            int total_page = (int) Math.ceil((double) itemOrders.size() / 10);
+            paginationItemOrderResponse.setTotal_page(total_page);
+
+            if(limit * 10 > itemOrders.size()) {
+                paginationItemOrderResponse.setData(itemOrders.subList((limit-1)*10, itemOrders.size()));
+            }
+            else {
+                paginationItemOrderResponse.setData(itemOrders.subList((limit-1)*10, limit*10));
+            }
+
+
             return ResponseEntity.status(200).body(paginationItemOrderResponse);
         } catch (Exception e) {
             return ResponseEntity.status(500).body(new MessageResponse("Lỗi server", -2));

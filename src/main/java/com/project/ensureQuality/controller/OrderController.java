@@ -5,10 +5,7 @@ import com.project.ensureQuality.model.ItemOrder;
 import com.project.ensureQuality.model.Order;
 import com.project.ensureQuality.model.Payment;
 import com.project.ensureQuality.model.Product;
-import com.project.ensureQuality.payload.response.ItemOrderResponse;
-import com.project.ensureQuality.payload.response.MessageResponse;
-import com.project.ensureQuality.payload.response.OrderResponse;
-import com.project.ensureQuality.payload.response.ProductResponse;
+import com.project.ensureQuality.payload.response.*;
 import com.project.ensureQuality.security.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -67,6 +64,16 @@ public class OrderController {
         return "siiuuu";
     }
 
+    @GetMapping("/order/list-item-order/{orderId}")
+    public ResponseEntity<?> getListItemOrderOfOrder(@PathVariable(value = "orderId") int orderId, @RequestParam int currentPage) {
+        try {
+            PaginationItemOrderResponse paginationItemOrderResponse = orderService.getAllItemOrderOfOrder(orderId, currentPage);
+            return ResponseEntity.status(200).body(paginationItemOrderResponse);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new MessageResponse("Lỗi server", -2));
+        }
+    }
+
     private List<ItemOrderResponse> getItemOrderResponse(List<ItemOrder> itemOrders) {
         List<ItemOrderResponse> itemOrderResponses=new ArrayList<>();
         for (ItemOrder itemOrder:itemOrders){
@@ -96,4 +103,6 @@ public class OrderController {
         }
         return new ProductResponse(product.getId(), product.getProductName(), photoBytes1, photoBytes2, product.getPrice(), product.getTotal());
     }
+
+
 }

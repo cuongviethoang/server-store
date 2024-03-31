@@ -1,14 +1,15 @@
 package com.project.ensureQuality.security.services.servicesImpl;
 
 import com.project.ensureQuality.model.Customer;
+import com.project.ensureQuality.model.Order;
 import com.project.ensureQuality.payload.response.CustomerResponse;
 import com.project.ensureQuality.payload.response.MessageResponse;
+import com.project.ensureQuality.payload.response.PaginationOrderResponse;
 import com.project.ensureQuality.repository.CustomerRepository;
 import com.project.ensureQuality.security.services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -89,5 +90,27 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 
+    @Override
+    public PaginationOrderResponse getAllOrdersOfCus(int cusId, int limit) {
+        try {
+            Customer customer = customerRepository.findById(cusId).get();
 
+            List<Order> orders = customer.getOrders();
+            PaginationOrderResponse paginationOrderResponse = new PaginationOrderResponse();
+            paginationOrderResponse.setTotal_order(orders.size());
+            paginationOrderResponse.setCurrent_page(limit);
+            paginationOrderResponse.setPer_page(8);
+
+            int total_pages = (int) Math.ceil((double) orders.size() / 8);
+            paginationOrderResponse.setTotal_page(total_pages);
+            if(limit * 8 > orders.size()) {
+                paginationOrderResponse.setData(orders.subList((limit-1)*5, orders.size()));
+            } else {
+                paginationOrderResponse.setData(orders.subList((limit-1)*5, limit*5));
+            }
+            return paginationOrderResponse;
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

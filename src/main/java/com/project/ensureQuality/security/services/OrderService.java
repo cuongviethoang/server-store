@@ -2,6 +2,8 @@ package com.project.ensureQuality.security.services;
 
 import com.project.ensureQuality.model.Order;
 import com.project.ensureQuality.payload.response.MessageResponse;
+import com.project.ensureQuality.payload.response.PaginationItemOrderResponse;
+import com.project.ensureQuality.payload.response.PaginationOrderResponse;
 
 import java.util.List;
 
@@ -11,4 +13,6 @@ public interface OrderService {
     List<Order> getAllOrder();
 
     Order getOrderById(int order_id);
+
+    PaginationItemOrderResponse getAllItemOrderOfOrder(int orderId, int limit);
 }

@@ -3,6 +3,7 @@ package com.project.ensureQuality.controller;
 import com.project.ensureQuality.model.Customer;
 import com.project.ensureQuality.payload.response.CustomerResponse;
 import com.project.ensureQuality.payload.response.MessageResponse;
+import com.project.ensureQuality.payload.response.PaginationOrderResponse;
 import com.project.ensureQuality.security.services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -100,6 +101,18 @@ public class CustomerController {
             CustomerResponse customerResponse = customerService.getListCusWhenSearch(q, currentPage);
 
             return ResponseEntity.status(200).body(customerResponse);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new MessageResponse("Lỗi server", -1));
+        }
+    }
+
+    @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
+    @GetMapping("/customer/list-order/{cusId}")
+    public ResponseEntity<?> getListOrderOfCus(@PathVariable(value = "cusId") int cusId, @RequestParam int currentPage) {
+        try {
+            PaginationOrderResponse paginationOrderResponse = customerService.getAllOrdersOfCus(cusId, currentPage);
+
+            return ResponseEntity.status(200).body(paginationOrderResponse);
         } catch (Exception e) {
             return ResponseEntity.status(500).body(new MessageResponse("Lỗi server", -1));
         }

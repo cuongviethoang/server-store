@@ -45,6 +45,8 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> roles;
 
+
+
     public User(String email, String phoneNumber, String password, String username, Date createdAt, Date updatedAt) {
         this.email = email;
         this.phoneNumber = phoneNumber;

@@ -10,6 +10,7 @@ import com.project.ensureQuality.security.services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -96,17 +97,26 @@ public class CustomerServiceImpl implements CustomerService {
             Customer customer = customerRepository.findById(cusId).get();
 
             List<Order> orders = customer.getOrders();
+            List<Order> customOrders = new ArrayList<>();
+            for(Order o : orders) {
+                Order newOrder = new Order();
+                newOrder.setId(o.getId());
+                newOrder.setCreateTime(o.getCreateTime());
+                newOrder.setCustomer(o.getCustomer());
+                newOrder.setPayment(o.getPayment());
+                customOrders.add(newOrder);
+            }
             PaginationOrderResponse paginationOrderResponse = new PaginationOrderResponse();
-            paginationOrderResponse.setTotal_order(orders.size());
+            paginationOrderResponse.setTotal_order(customOrders.size());
             paginationOrderResponse.setCurrent_page(limit);
             paginationOrderResponse.setPer_page(8);
 
-            int total_pages = (int) Math.ceil((double) orders.size() / 8);
+            int total_pages = (int) Math.ceil((double) customOrders.size() / 8);
             paginationOrderResponse.setTotal_page(total_pages);
-            if(limit * 8 > orders.size()) {
-                paginationOrderResponse.setData(orders.subList((limit-1)*5, orders.size()));
+            if(limit * 8 > customOrders.size()) {
+                paginationOrderResponse.setData(customOrders.subList((limit-1)*5, customOrders.size()));
             } else {
-                paginationOrderResponse.setData(orders.subList((limit-1)*5, limit*5));
+                paginationOrderResponse.setData(customOrders.subList((limit-1)*5, limit*5));
             }
             return paginationOrderResponse;
         } catch (Exception e) {

@@ -32,7 +32,6 @@ public class Order {
             mappedBy = "order",
             cascade = CascadeType.ALL
     )
-    @JsonIgnore
     private List<ItemOrder> itemOrders;
 
     @OneToOne(

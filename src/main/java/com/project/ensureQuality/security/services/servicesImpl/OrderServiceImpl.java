@@ -9,9 +9,11 @@ import com.project.ensureQuality.repository.ItemOrderRepository;
 import com.project.ensureQuality.repository.OrderRepository;
 import com.project.ensureQuality.security.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -43,6 +45,19 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order getOrderById(int order_id) {
         return orderRepository.findById(order_id).orElse(new Order());
+    }
+
+    @Override
+    public List<Order> getAllOrdersSearchWithPagination(
+            String key, Date startTime, Date endTime, Pageable pageable) {
+        return orderRepository.getAllOrdersSearchWithPagination(
+                key, startTime, endTime, pageable).getContent();
+    }
+
+    @Override
+    public int getAllOrdersSearchWithPaginationNum(String key, Date startTime, Date endTime) {
+        return orderRepository.getAllOrdersSearchWithPaginationNum(key, startTime, endTime)
+                .orElse(new ArrayList<>()).size();
     }
 
 

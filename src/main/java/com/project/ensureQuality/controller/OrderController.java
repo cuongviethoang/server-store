@@ -9,13 +9,19 @@ import com.project.ensureQuality.payload.response.*;
 import com.project.ensureQuality.repository.OrderRepository;
 import com.project.ensureQuality.security.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 @RestController
@@ -56,8 +62,54 @@ public class OrderController {
             );
             orderResponses.add(orderResponse);
         }
+        Collections.reverse(orderResponses);
         return orderResponses;
     }
+
+    @GetMapping("/order-all-pagination")
+    public List<OrderResponse> getAllOrdersSearchWithPagination(
+            @RequestParam("page") int page,
+            @RequestParam("limit") int limit,
+            @RequestParam("key") String key,
+            @RequestParam("startTime") String startTimeStr,
+            @RequestParam("endTime") String endTimeStr){
+        Date startTime = parseDate(startTimeStr);
+        Date endTime = parseDate(endTimeStr);
+        Pageable pageable = PageRequest.of(page-1, limit);
+        List<Order> orders = orderService.getAllOrdersSearchWithPagination(
+                key,
+                startTime,
+                endTime,
+                pageable);
+        List<OrderResponse> orderResponses = new ArrayList<>();
+        for (Order order:orders){
+            OrderResponse orderResponse=new OrderResponse(
+                    order.getId(),
+                    order.getCode(),
+                    order.getCreateTime(),
+                    order.getCustomer(),
+                    getItemOrderResponse(order.getItemOrders()),
+                    order.getPayment(),
+                    order.getUser()
+            );
+            orderResponses.add(orderResponse);
+        }
+        return orderResponses;
+    }
+
+    @GetMapping("/order-all-pagination-num")
+    public int getAllOrdersSearchWithPaginationNum(
+            @RequestParam("key") String key,
+            @RequestParam("startTime") String startTimeStr,
+            @RequestParam("endTime") String endTimeStr){
+        Date startTime = parseDate(startTimeStr);
+        Date endTime = parseDate(endTimeStr);
+        return orderService.getAllOrdersSearchWithPaginationNum(
+                key,
+                startTime,
+                endTime);
+    }
+
 
     @GetMapping("/order/get/{order_id}")
     public Order getOrderById(@PathVariable("order_id") int order_id){
@@ -125,5 +177,13 @@ public class OrderController {
         return new ProductResponse(product.getId(), product.getProductName(), photoBytes1, photoBytes2, product.getPrice(), product.getTotal());
     }
 
-
+    private Date parseDate(String dateStr) {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+            return dateFormat.parse(dateStr);
+        } catch (ParseException e) {
+            // Xử lý ngoại lệ khi không thể chuyển đổi
+            return null;
+        }
+    }
 }

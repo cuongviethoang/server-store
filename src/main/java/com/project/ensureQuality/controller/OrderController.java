@@ -56,7 +56,9 @@ public class OrderController {
                     order.getCode(),
                     order.getCreateTime(),
                     order.getCustomer(),
-                    getItemOrderResponse(order.getItemOrders()),
+                    getItemOrderResponse(
+                            order.getItemOrders()!=null ? order.getItemOrders():new ArrayList<>()
+                    ),
                     order.getPayment(),
                     order.getUser()
             );
@@ -88,7 +90,9 @@ public class OrderController {
                     order.getCode(),
                     order.getCreateTime(),
                     order.getCustomer(),
-                    getItemOrderResponse(order.getItemOrders()),
+                    getItemOrderResponse(
+                            order.getItemOrders()!=null ? order.getItemOrders():new ArrayList<>()
+                    ),
                     order.getPayment(),
                     order.getUser()
             );
@@ -147,12 +151,13 @@ public class OrderController {
         }
     }
 
-    private List<ItemOrderResponse> getItemOrderResponse(List<ItemOrder> itemOrders) {
+    public List<ItemOrderResponse> getItemOrderResponse(List<ItemOrder> itemOrders) {
         List<ItemOrderResponse> itemOrderResponses=new ArrayList<>();
         for (ItemOrder itemOrder:itemOrders){
             ItemOrderResponse itemOrderResponse= new ItemOrderResponse(
                     itemOrder.getId(),
-                    getProductResponse(itemOrder.getProduct()),
+                    itemOrder.getProduct()!=null?
+                            getProductResponse(itemOrder.getProduct()):null,
                     itemOrder.getQuantity(),
                     itemOrder.getPrice()
             );
@@ -161,7 +166,7 @@ public class OrderController {
         return  itemOrderResponses;
     }
 
-    private ProductResponse getProductResponse(Product product) {
+    public ProductResponse getProductResponse(Product product) {
         byte[] photoBytes1 = null;
         byte[] photoBytes2 = null;
         Blob productImage = product.getProductImage();
@@ -177,7 +182,7 @@ public class OrderController {
         return new ProductResponse(product.getId(), product.getProductName(), photoBytes1, photoBytes2, product.getPrice(), product.getTotal());
     }
 
-    private Date parseDate(String dateStr) {
+    public Date parseDate(String dateStr) {
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
             return dateFormat.parse(dateStr);

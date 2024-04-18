@@ -42,4 +42,8 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user; // Nhân viên tạo đơn
+
+    public Order(Integer id){
+        this.id=id;
+    }
 }

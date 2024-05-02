@@ -78,7 +78,7 @@ public class AuthController {
                                 roles
                         ));
         } catch (AuthenticationException e) {
-            return ResponseEntity.status(500).body(new MessageResponse("Lôi: Tài khoản mật khẩu không chính xác", -1));
+            return ResponseEntity.status(500).body(new MessageResponse("Lỗi: Tài khoản mật khẩu không chính xác", -1));
         }
     }
 

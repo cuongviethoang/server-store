@@ -59,35 +59,12 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public int getAllCusNum() {
-//        try {
-//            List<Customer> customers = customerRepository.findAll();
-//            return customers.size();
-//        } catch (Exception e) {
-//            return 0;
-//        }
         List<Customer> customers = customerRepository.findAll();
         return customers.size();
     }
 
     @Override
     public CustomerResponse getListCusWhenSearch(String q, int currentPage) {
-//        try {
-//            List<Customer> customers = customerRepository.getListCusByValueSearch(q);
-//            CustomerResponse customerResponse = new CustomerResponse();
-//            customerResponse.setTotal_cus(customers.size());
-//            customerResponse.setCurrent_page(currentPage);
-//            customerResponse.setPer_page(5);
-//            int total_pages = (int) Math.ceil((double) customers.size() / 5);
-//            customerResponse.setTotal_page(total_pages);
-//            if(currentPage * 5 > customers.size()) {
-//                customerResponse.setData(customers.subList((currentPage-1)*5, customers.size()));
-//            } else {
-//                customerResponse.setData(customers.subList((currentPage-1)*5, currentPage*5));
-//            }
-//            return customerResponse;
-//        } catch (Exception e) {
-//            return null;
-//        }
         List<Customer> customers = customerRepository.getListCusByValueSearch(q);
         CustomerResponse customerResponse = new CustomerResponse();
         customerResponse.setTotal_cus(customers.size());
@@ -105,35 +82,6 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public PaginationOrderResponse getAllOrdersOfCus(int cusId, int limit) {
-//        try {
-//            Customer customer = customerRepository.findById(cusId).get();
-//
-//            List<Order> orders = customer.getOrders();
-//            List<Order> customOrders = new ArrayList<>();
-//            for(Order o : orders) {
-//                Order newOrder = new Order();
-//                newOrder.setId(o.getId());
-//                newOrder.setCreateTime(o.getCreateTime());
-//                newOrder.setCustomer(o.getCustomer());
-//                newOrder.setPayment(o.getPayment());
-//                customOrders.add(newOrder);
-//            }
-//            PaginationOrderResponse paginationOrderResponse = new PaginationOrderResponse();
-//            paginationOrderResponse.setTotal_order(customOrders.size());
-//            paginationOrderResponse.setCurrent_page(limit);
-//            paginationOrderResponse.setPer_page(8);
-//
-//            int total_pages = (int) Math.ceil((double) customOrders.size() / 8);
-//            paginationOrderResponse.setTotal_page(total_pages);
-//            if(limit * 8 > customOrders.size()) {
-//                paginationOrderResponse.setData(customOrders.subList((limit-1)*5, customOrders.size()));
-//            } else {
-//                paginationOrderResponse.setData(customOrders.subList((limit-1)*5, limit*5));
-//            }
-//            return paginationOrderResponse;
-//        } catch (Exception e) {
-//            return null;
-//        }
         Customer customer = customerRepository.findById(cusId).get();
 
         List<Order> orders = customer.getOrders();

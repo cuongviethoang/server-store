@@ -30,4 +30,15 @@ public class Customer {
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Order> orders;
+
+    public Customer(String username, String phoneNumber) {
+        this.username = username;
+        this.phoneNumber = phoneNumber;
+    }
+
+    public Customer(Integer id, String username, String phoneNumber) {
+        this.id = id;
+        this.username = username;
+        this.phoneNumber = phoneNumber;
+    }
 }

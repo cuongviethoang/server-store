@@ -70,7 +70,7 @@ public class CustomerController {
             int count = customerService.getAllCusNum();
             return ResponseEntity.status(200).body(count);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new MessageResponse("Không tải đợc số lượng khách hàng", -1));
+            return ResponseEntity.status(500).body(new MessageResponse("Không tải được số lượng khách hàng", -1));
         }
     }
 

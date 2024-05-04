@@ -1,9 +1,7 @@
 package com.project.ensureQuality.payload.response;
-
 import com.project.ensureQuality.model.Customer;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.util.List;
 
 @Data
@@ -15,8 +13,6 @@ public class CustomerResponse {
     private int  total_page;
     private List<Customer> data;
 
-
-
     public CustomerResponse(int total_cus, int current_page,int per_page, int total_page, List<Customer> data ) {
         this.total_cus = total_cus;
         this.current_page = current_page;
@@ -24,6 +20,4 @@ public class CustomerResponse {
         this.total_page = total_page;
         this.data = data;
     }
-
-
 }

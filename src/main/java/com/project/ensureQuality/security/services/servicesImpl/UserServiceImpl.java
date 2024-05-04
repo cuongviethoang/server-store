@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
                 return new MessageResponse("Lỗi: Password là yêu cầu bắt buộc", 1);
             }
             if (userRepository.existsByEmail(user.getEmail())) {
-                return new MessageResponse("Lỗi: Email đã tồn taị", 1);
+                return new MessageResponse("Lỗi: Email đã tồn tại", 1);
             }
             if (userRepository.existsByPhoneNumber(user.getPhoneNumber())) {
                 return new MessageResponse("Lỗi: Số điện thoại đã tồn tại", 1);

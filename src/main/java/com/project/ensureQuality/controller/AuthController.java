@@ -78,7 +78,7 @@ public class AuthController {
                                 roles
                         ));
         } catch (AuthenticationException e) {
-            return ResponseEntity.status(500).body(new MessageResponse("Lôi: Tài khoản mật khẩu không chính xác", -1));
+            return ResponseEntity.status(500).body(new MessageResponse("Lỗi: Tài khoản mật khẩu không chính xác", -1));
         }
     }
 
@@ -96,7 +96,7 @@ public class AuthController {
                     return ResponseEntity.status(400).body(new MessageResponse("Lỗi: Password là yêu cầu bắt buộc", 1));
                 }
                 if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-                    return ResponseEntity.status(400).body(new MessageResponse("Lỗi: Email đã tồn taị", 1));
+                    return ResponseEntity.status(400).body(new MessageResponse("Lỗi: Email đã tồn tại", 1));
                 }
                 if (userRepository.existsByPhoneNumber(signUpRequest.getPhoneNumber())) {
                     return ResponseEntity.status(400).body(new MessageResponse("Lỗi: Số điện thoại đã tồn tại", 1));
@@ -140,7 +140,7 @@ public class AuthController {
                 }
                 user.setRoles(roles);
                 userRepository.save(user);
-                return ResponseEntity.ok(new MessageResponse("Đăng kí thành công!", 0));
+                return ResponseEntity.ok(new MessageResponse("Đăng ký thành công!", 0));
             } catch (Exception e) {
                 System.out.println(e);
                 return ResponseEntity.status(500).body(new MessageResponse("Error server", -1));

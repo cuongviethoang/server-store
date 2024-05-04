@@ -15,6 +15,7 @@ import java.util.Optional;
 public interface OrderRepository extends JpaRepository<Order,Integer> {
     @Query("SELECT DISTINCT o FROM Order o JOIN o.itemOrders io WHERE " +
             "(CAST(o.id AS string) LIKE %:key% " +
+            "OR o.code LIKE %:key% " +
             "OR o.customer.username LIKE %:key% " +
             "OR io.product.productName LIKE %:key%) " +
             "AND (o.createTime BETWEEN:startTime AND :endTime) " +
@@ -24,6 +25,7 @@ public interface OrderRepository extends JpaRepository<Order,Integer> {
 
     @Query("SELECT DISTINCT o FROM Order o JOIN o.itemOrders io WHERE " +
             "(CAST(o.id AS string) LIKE %:key% " +
+            "OR o.code LIKE %:key% " +
             "OR o.customer.username LIKE %:key% " +
             "OR io.product.productName LIKE %:key%) " +
             "AND (o.createTime BETWEEN:startTime AND :endTime) " +

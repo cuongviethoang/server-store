@@ -27,6 +27,13 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public MessageResponse addNewOrder(Order order) {
         Order newOrder =  orderRepository.save(order);
+        String code="" + newOrder.getId();
+        for (int i=(newOrder.getId()+"").length();i<=10;i++){
+            code="0" + code;
+        }
+        newOrder.setCode("HD"+code);
+        orderRepository.save(newOrder);
+
         List<ItemOrder> itemOrders = order.getItemOrders();
 
         for (ItemOrder itemOrder : itemOrders) {

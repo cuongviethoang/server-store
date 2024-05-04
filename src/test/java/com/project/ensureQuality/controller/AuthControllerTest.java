@@ -29,6 +29,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.Duration;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -348,5 +349,30 @@ public class AuthControllerTest {
 
         MessageResponse messageResponse = (MessageResponse) responseBody;
         assertEquals("Lỗi: Vui lòng điền đầy đủ thông tin", messageResponse.getEM());
+    }
+
+    @Test
+    public void logoutUser_Success() {
+        ResponseCookie mockCookie = ResponseCookie.from("jwt", "")
+                .maxAge(Duration.ZERO)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .build();
+        when(jwtUtils.getCleanJwtCookie()).thenReturn(mockCookie);
+
+        ResponseEntity<?> response = authController.logoutUser();
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertTrue(response.getBody() instanceof MessageResponse);
+        MessageResponse responseBody = (MessageResponse) response.getBody();
+        assertEquals("Đăng xuất thành công!", responseBody.getEM());
+        assertEquals(0, responseBody.getEC());
+
+        HttpHeaders headers = response.getHeaders();
+        List<String> setCookieHeaders = headers.get(HttpHeaders.SET_COOKIE);
+        assertNotNull("Not null", setCookieHeaders);
+        assertEquals(1, setCookieHeaders.size());
+        assertEquals(mockCookie.toString(), setCookieHeaders.get(0));
     }
 }

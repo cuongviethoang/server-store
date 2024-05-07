@@ -3,6 +3,7 @@ package com.project.ensureQuality.controller;
 import com.project.ensureQuality.model.Customer;
 import com.project.ensureQuality.payload.response.CustomerResponse;
 import com.project.ensureQuality.payload.response.MessageResponse;
+import com.project.ensureQuality.payload.response.PaginationOrderResponse;
 import com.project.ensureQuality.security.services.CustomerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -91,6 +92,22 @@ public class CustomerControllerTest {
     }
 
     @Test
+    public void testAddNewCustomer_Exception() {
+
+
+        Customer newCustomer = new Customer(1,"A", "0123456789");
+
+        when(customerService.addNewCustomer(newCustomer)).thenThrow(new RuntimeException("Test exception"));
+
+        ResponseEntity<?> responseEntity = customerController.addNewCustomer(newCustomer);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+        assertEquals("Lỗi server", ((MessageResponse) responseEntity.getBody()).getEM());
+        assertEquals(-1, ((MessageResponse) responseEntity.getBody()).getEC());
+        verify(customerService, times(1)).addNewCustomer(newCustomer);
+    }
+
+    @Test
     public void testGetAllCustomer_Success() {
         // Mock data
         int page = 1;
@@ -115,6 +132,21 @@ public class CustomerControllerTest {
     }
 
     @Test
+    public void testGetAllCustomer_Exception() {
+        int page = 1;
+        int limit = 1;
+
+        when(customerService.getAllCustomer(page, limit)).thenThrow(new RuntimeException("Test exception"));
+
+        ResponseEntity<?> responseEntity = customerController.getAllCustomer(page, limit);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+        assertEquals("Lỗi server", ((MessageResponse) responseEntity.getBody()).getEM());
+        assertEquals(-1, ((MessageResponse) responseEntity.getBody()).getEC());
+        verify(customerService, times(1)).getAllCustomer(page, limit);
+    }
+
+    @Test
     public void testGetDetailCustomer_Success() {
         // Mock data
         int cusId = 1;
@@ -135,6 +167,19 @@ public class CustomerControllerTest {
     }
 
     @Test
+    public void testGetDetailCustomer_Exception() {
+
+        when(customerService.getDetailCustomer(1)).thenThrow(new RuntimeException("Test exception"));
+
+        ResponseEntity<?> responseEntity = customerController.getDetailCustomer(1);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+        assertEquals("Lỗi server", ((MessageResponse) responseEntity.getBody()).getEM());
+        assertEquals(-1, ((MessageResponse) responseEntity.getBody()).getEC());
+        verify(customerService, times(1)).getDetailCustomer(1);
+    }
+
+    @Test
     public void testGetAllCusNum_Success() {
         // Mock data
         int mockCount = 10;
@@ -150,6 +195,22 @@ public class CustomerControllerTest {
         assertEquals(mockCount, responseEntity.getBody());
 
         // Verify gọi phương thức getAllCusNum của customerService
+        verify(customerService, times(1)).getAllCusNum();
+    }
+
+    @Test
+    public void testGetAllCusNum_Exception() {
+
+        // Mock service response with error message
+        when(customerService.getAllCusNum()).thenThrow(new RuntimeException("Test exception"));
+
+        // Call the method to test
+        ResponseEntity<?> responseEntity = customerController.getAllCusNum();
+
+        // Verify behavior
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+        assertEquals("Không tải được số lượng khách hàng", ((MessageResponse) responseEntity.getBody()).getEM());
+        assertEquals(-1, ((MessageResponse) responseEntity.getBody()).getEC());
         verify(customerService, times(1)).getAllCusNum();
     }
 
@@ -210,6 +271,25 @@ public class CustomerControllerTest {
     }
 
     @Test
+    public void testUpdateCustomer_Exception() {
+        // Mock data with existing phone number
+        Customer customerToUpdate = new Customer();
+        customerToUpdate.setPhoneNumber("1234567890");
+
+        // Mock service response with error message
+        when(customerService.updateCustomer(customerToUpdate)).thenThrow(new RuntimeException("Test exception"));
+
+        // Call the method to test
+        ResponseEntity<?> responseEntity = customerController.updateCustomer(customerToUpdate);
+
+        // Verify behavior
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+        assertEquals("Lỗi: Error server", ((MessageResponse) responseEntity.getBody()).getEM());
+        assertEquals(-1, ((MessageResponse) responseEntity.getBody()).getEC());
+        verify(customerService, times(1)).updateCustomer(customerToUpdate);
+    }
+
+    @Test
     public void testGetSearchListCustomer_Success() {
         // Mock data
         String query = "John";
@@ -228,5 +308,63 @@ public class CustomerControllerTest {
 
         // Verify gọi phương thức getListCusWhenSearch của customerService
         verify(customerService, times(1)).getListCusWhenSearch(query, currentPage);
+    }
+
+    @Test
+    public void testGetSearchListCustomer_Exception() {
+        // Mock data
+        String query = "John";
+        int currentPage = 1;
+
+        // Setup mock behavior to throw an exception
+        when(customerService.getListCusWhenSearch(query, currentPage)).thenThrow(new RuntimeException("Test exception"));
+
+        // Call the method to test
+        ResponseEntity<?> responseEntity = customerController.getSearchListCustomer(query, currentPage);
+
+        // Verify behavior
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+        assertEquals("Lỗi server", ((MessageResponse) responseEntity.getBody()).getEM());
+        assertEquals(-1, ((MessageResponse) responseEntity.getBody()).getEC());
+        verify(customerService, times(1)).getListCusWhenSearch(query, currentPage);
+    }
+
+    @Test
+    public void testGetAllOrdersOfCustomer_Success() {
+        // Mock data
+        int cusId = 1;
+        int currentPage = 1;
+        PaginationOrderResponse mockPaginationOrderResponse = new PaginationOrderResponse(5, currentPage, 8, 1, null);
+
+        // Mock service response
+        when(customerService.getAllOrdersOfCus(cusId, currentPage)).thenReturn(mockPaginationOrderResponse);
+
+        // Gọi phương thức cần test
+        ResponseEntity<?> responseEntity = customerController.getListOrderOfCus(cusId, currentPage);
+
+        // Kiểm tra HttpStatus và dữ liệu trả về
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(mockPaginationOrderResponse, responseEntity.getBody());
+
+        // Verify gọi phương thức getListCusWhenSearch của customerService
+        verify(customerService, times(1)).getAllOrdersOfCus(cusId, currentPage);
+    }
+
+    @Test
+    public void testGetAllOrdersOfCustomer_Exception() {
+        int cusId = 1;
+        int currentPage = 1;
+
+        // Setup mock behavior to throw an exception
+        when(customerService.getAllOrdersOfCus(cusId, currentPage)).thenThrow(new RuntimeException("Test exception"));
+
+        // Call the method to test
+        ResponseEntity<?> responseEntity = customerController.getListOrderOfCus(cusId, currentPage);
+
+        // Verify behavior
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+        assertEquals("Lỗi server", ((MessageResponse) responseEntity.getBody()).getEM());
+        assertEquals(-1, ((MessageResponse) responseEntity.getBody()).getEC());
+        verify(customerService, times(1)).getAllOrdersOfCus(cusId, currentPage);
     }
 }

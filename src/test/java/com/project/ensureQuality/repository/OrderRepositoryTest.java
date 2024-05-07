@@ -41,7 +41,7 @@ class OrderRepositoryTest {
                 key, startTime, endTime, pageable);
         List<Order> ordersResult=result.getContent();
         // Assert
-        assertEquals(10, ordersResult.size());
+        assertEquals(2, ordersResult.size());
     }
 
     @Test

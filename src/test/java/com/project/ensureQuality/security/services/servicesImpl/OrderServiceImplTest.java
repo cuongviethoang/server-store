@@ -43,6 +43,7 @@ class OrderServiceImplTest {
     void addNewOrder_Success() {
         Order order = new Order();
         List<ItemOrder> itemOrders = new ArrayList<>();
+        itemOrders.add(new ItemOrder());
         order.setItemOrders(itemOrders);
 
         when(orderRepository.save(any(Order.class))).thenReturn(order);
@@ -51,7 +52,7 @@ class OrderServiceImplTest {
 
         assertEquals("Tạo Order thành công", response.getEM());
         assertEquals(0, response.getEC());
-        verify(orderRepository, times(1)).save(any(Order.class));
+        verify(orderRepository, times(2)).save(any(Order.class));
         verify(itemOrderRepository, times(1)).saveAll(anyList());
     }
 

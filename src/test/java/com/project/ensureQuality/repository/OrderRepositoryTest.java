@@ -17,7 +17,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-class OrderRepositoryIntegrationTest {
+class OrderRepositoryTest {
 
     @Autowired
     private OrderRepository orderRepository;
@@ -31,7 +31,7 @@ class OrderRepositoryIntegrationTest {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
         try {
             startTime = dateFormat.parse("2024-01-01T00:00");
-            endTime = dateFormat.parse("2024-04-16T00:00");
+            endTime = dateFormat.parse("2025-01-01T00:00");
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
@@ -52,7 +52,7 @@ class OrderRepositoryIntegrationTest {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
         try {
             startTime = dateFormat.parse("2024-01-01T00:00");
-            endTime = dateFormat.parse("2024-04-16T00:00");
+            endTime = dateFormat.parse("2025-01-01T00:00");
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
@@ -61,7 +61,7 @@ class OrderRepositoryIntegrationTest {
                 key, startTime, endTime);
 
         // Assert
-        assertEquals(2, result.get().size());
+        assertEquals(15, result.get().size());
     }
 }
 

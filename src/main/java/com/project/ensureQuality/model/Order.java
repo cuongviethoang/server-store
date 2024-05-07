@@ -46,4 +46,13 @@ public class Order {
     public Order(Integer id){
         this.id=id;
     }
+
+    public Order(Integer id, String code, Date createTime, Customer customer, List<ItemOrder> itemOrders, Payment payment) {
+        this.id = id;
+        this.code = code;
+        this.createTime = createTime;
+        this.customer = customer;
+        this.itemOrders = itemOrders;
+        this.payment = payment;
+    }
 }

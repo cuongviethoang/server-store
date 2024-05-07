@@ -10,8 +10,6 @@ public class MessageResponse {
     private String EM;
     private int EC;
 
-
-
     public MessageResponse(String EM, int EC) {
         this.EM = EM;
         this.EC = EC;

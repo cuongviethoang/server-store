@@ -127,13 +127,12 @@ public class OrderController {
     @GetMapping("/order/list-item-order/{orderId}")
     public ResponseEntity<?> getListItemOrderOfOrder(@PathVariable(value = "orderId") int orderId, @RequestParam int limit) {
         try {
-//            PaginationItemOrderResponse paginationItemOrderResponse = orderService.getAllItemOrderOfOrder(orderId, currentPage);
             Order order = orderRepository.findById(orderId).get();
             List<ItemOrderResponse> itemOrders = getItemOrderResponse(order.getItemOrders());
             PaginationItemOrderResponse paginationItemOrderResponse = new PaginationItemOrderResponse();
             paginationItemOrderResponse.setTotal_item(itemOrders.size());
             paginationItemOrderResponse.setPer_page(10);
-
+            paginationItemOrderResponse.setCurrent_page(limit);
             int total_page = (int) Math.ceil((double) itemOrders.size() / 10);
             paginationItemOrderResponse.setTotal_page(total_page);
 

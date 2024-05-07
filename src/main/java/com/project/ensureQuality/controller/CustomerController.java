@@ -37,7 +37,7 @@ public class CustomerController {
 
         } catch (Exception e){
             System.out.println(e);
-            return ResponseEntity.status(500).body(new MessageResponse("Lỗi: Error server", -1));
+            return ResponseEntity.status(500).body(new MessageResponse("Lỗi server", -1));
         }
     }
 
@@ -48,7 +48,7 @@ public class CustomerController {
             List<Customer> customers = customerService.getAllCustomer(page, limit);
             return ResponseEntity.status(200).body(customers);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new MessageResponse("Error server", -1));
+            return ResponseEntity.status(500).body(new MessageResponse("Lỗi server", -1));
         }
     }
 
@@ -59,7 +59,7 @@ public class CustomerController {
             Customer customer = customerService.getDetailCustomer(cusId);
             return  ResponseEntity.status(200).body(customer);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new MessageResponse("Error server", -1));
+            return ResponseEntity.status(500).body(new MessageResponse("Lỗi server", -1));
         }
     }
 
@@ -117,4 +117,5 @@ public class CustomerController {
             return ResponseEntity.status(500).body(new MessageResponse("Lỗi server", -1));
         }
     }
+
 }

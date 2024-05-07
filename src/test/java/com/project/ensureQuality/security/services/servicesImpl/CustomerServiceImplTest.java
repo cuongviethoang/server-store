@@ -34,7 +34,7 @@ public class CustomerServiceImplTest {
     }
 
     @Test
-    public void testAddNewCustomer_Success() {
+    public void testPostMethod_WhenAddCustomer_ReturnNewCustomer() {
         Customer newCustomer = new Customer();
         newCustomer.setPhoneNumber("1234567890");
 
@@ -48,7 +48,7 @@ public class CustomerServiceImplTest {
     }
 
     @Test
-    public void testAddNewCustomer_Failure() {
+    public void testPostMethod_WhenAddCustomer_ReturnExistPhoneNumber() {
         Customer existingCustomer = new Customer();
         existingCustomer.setPhoneNumber("1234567890");
 
@@ -61,7 +61,7 @@ public class CustomerServiceImplTest {
     }
 
     @Test
-    public void testGetAllCustomer() {
+    public void testGetMethod_WhenGetAllCustomers_ReturnAllCustomers() {
         List<Customer> customers = getCustomersWithPagination();
         int page = 1;
         int limit = 10;
@@ -83,7 +83,7 @@ public class CustomerServiceImplTest {
     }
 
     @Test
-    public void testUpdateCustomer_Success() {
+    public void testPutMethod_WhenUpdateCustomer_ReturnUpdateCustomer() {
         // Tạo một đối tượng Customer cần cập nhật
         Customer existingCustomer = new Customer();
         existingCustomer.setId(1); // Thiết lập ID của khách hàng hiện có
@@ -106,7 +106,7 @@ public class CustomerServiceImplTest {
     }
 
     @Test
-    public void testUpdateCustomer_PhoneNumberAlreadyExists() {
+    public void testPutMethod_WhenUpdateCustomer_ReturnPhoneNumberAlreadyExists() {
         // Mock data
         Customer existingCustomer = new Customer(1, "John Doe", "1234567890");
         Customer updatedCustomer = new Customer(1, "John Doe", "9876543210");
@@ -129,7 +129,7 @@ public class CustomerServiceImplTest {
     }
 
     @Test
-    public void testUpdateCustomer_CustomerNotFound() {
+    public void testPutMethod_WhenUpdateCustomer_ReturnCustomerNotFound() {
         Customer nonExistingCustomer = new Customer();
         nonExistingCustomer.setId(2); // Thiết lập ID của khách hàng không tồn tại
 
@@ -146,7 +146,7 @@ public class CustomerServiceImplTest {
     }
 
     @Test
-    public void testGetDetailCustomer_CustomerFound() {
+    public void testGetMethod_WhenGetDetailCustomer_ReturnCustomer() {
         // Khách hàng có ID tồn tại trong cơ sở dữ liệu
         int customerId = 1;
         Customer existingCustomer = new Customer();
@@ -165,7 +165,7 @@ public class CustomerServiceImplTest {
     }
 
     @Test
-    public void testGetDetailCustomer_CustomerNotFound() {
+    public void testGetMethod_WhenGetDetailCustomer_ReturnCustomerNotFound() {
         // Khách hàng không tồn tại trong cơ sở dữ liệu
         int customerId = 2;
 
@@ -179,7 +179,7 @@ public class CustomerServiceImplTest {
     }
 
     @Test
-    public void testGetAllCusNum() {
+    public void testGetMethod_WhenTotalCustomers_ReturnTotalCustomers() {
         // Danh sách khách hàng mẫu
         List<Customer> mockCustomers = Arrays.asList(
                 new Customer(1, "John Doe", "1234567890"),
@@ -198,7 +198,7 @@ public class CustomerServiceImplTest {
     }
 
     @Test
-    public void testGetListCusWhenSearch() {
+    public void testGetMethod_WhenGetListCustomersWhenSearch_ReturnListCustomers() {
         // Giá trị tìm kiếm và trang hiện tại
         String searchValue = "Doe";
         int currentPage = 1;
@@ -228,5 +228,31 @@ public class CustomerServiceImplTest {
         int endIndex = Math.min(startIndex + 5, mockCustomers.size());
         expectedData = mockCustomers.subList(startIndex, endIndex);
         assertEquals(expectedData, result.getData());
+    }
+
+    @Test
+    public void testGetMethod_WhenGetAllOrdersOfCustomer_ReturnListOrders() {
+        // Mock data
+        int cusId = 1;
+        int limit = 2;
+        Customer customer = new Customer();
+        customer.setId(cusId);
+        List<Order> orders = Arrays.asList(
+                new Order(1, "ABC123", new Date(), customer, null, null),
+                new Order(2, "DEF456", new Date(), customer, null, null),
+                new Order(3, "DEF789", new Date(), customer, null, null),
+                new Order(4, "DEF012", new Date(), customer, null, null),
+                new Order(5, "DEF3456", new Date(), customer, null, null)
+        );
+        customer.setOrders(orders);
+
+        when(customerRepository.findById(1)).thenReturn(Optional.of(customer));
+        PaginationOrderResponse paginationOrderResponse = customerService.getAllOrdersOfCus(1, 1);
+
+        assertEquals(5, paginationOrderResponse.getTotal_order());
+        assertEquals(1, paginationOrderResponse.getCurrent_page());
+        assertEquals(8, paginationOrderResponse.getPer_page());
+        assertEquals(1, paginationOrderResponse.getTotal_page());
+        assertEquals(5, paginationOrderResponse.getData().size());
     }
 }

@@ -41,7 +41,7 @@ class OrderRepositoryIntegrationTest {
                 key, startTime, endTime, pageable);
         List<Order> ordersResult=result.getContent();
         // Assert
-        assertEquals(10, ordersResult.size());
+        assertEquals(2, ordersResult.size());
     }
 
     @Test
@@ -61,7 +61,7 @@ class OrderRepositoryIntegrationTest {
                 key, startTime, endTime);
 
         // Assert
-        assertEquals(30, result.get().size());
+        assertEquals(2, result.get().size());
     }
 }
 

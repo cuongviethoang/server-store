@@ -29,7 +29,7 @@ public class CustomerRepositoryTest {
     }
 
     @Test
-    public void testGetListCusByValueSearch() {
+    public void testGetMathod_WhenSearchCustomersPagination_ReturnCustomersByValueSearch() {
         // Given
         String searchKeyword = "anh";
         List<Customer> result = customerRepository.getListCusByValueSearch(searchKeyword);

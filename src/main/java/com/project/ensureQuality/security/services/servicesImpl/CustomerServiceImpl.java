@@ -83,7 +83,6 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public PaginationOrderResponse getAllOrdersOfCus(int cusId, int limit) {
         Customer customer = customerRepository.findById(cusId).get();
-
         List<Order> orders = customer.getOrders();
         List<Order> customOrders = new ArrayList<>();
         for(Order o : orders) {
@@ -92,6 +91,8 @@ public class CustomerServiceImpl implements CustomerService {
             newOrder.setCreateTime(o.getCreateTime());
             newOrder.setCustomer(o.getCustomer());
             newOrder.setPayment(o.getPayment());
+            newOrder.setCode(o.getCode());
+            newOrder.setUser(o.getUser());
             customOrders.add(newOrder);
         }
         PaginationOrderResponse paginationOrderResponse = new PaginationOrderResponse();

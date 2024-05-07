@@ -4,10 +4,7 @@ import com.project.ensureQuality.exception.PhotoRetrievaException;
 import com.project.ensureQuality.model.ItemOrder;
 import com.project.ensureQuality.model.Order;
 import com.project.ensureQuality.model.Product;
-import com.project.ensureQuality.payload.response.ItemOrderResponse;
-import com.project.ensureQuality.payload.response.MessageResponse;
-import com.project.ensureQuality.payload.response.OrderResponse;
-import com.project.ensureQuality.payload.response.ProductResponse;
+import com.project.ensureQuality.payload.response.*;
 import com.project.ensureQuality.security.services.OrderService;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.junit.jupiter.api.BeforeEach;
@@ -119,6 +116,52 @@ class OrderControllerTest {
 
         assertEquals(order, result);
         verify(orderService, times(1)).getOrderById(1);
+    }
+
+    @Test
+    public void getListItemOrderOfOrderReturnsDataSuccessfully() {
+        // Setup
+        int orderId = 1;
+        Order order = new Order();
+        List<ItemOrder> itemOrders = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            itemOrders.add(new ItemOrder());
+        }
+        order.setItemOrders(itemOrders);
+
+
+        when(orderService.getOrderById(orderId)).thenReturn(order);
+
+        // Execute
+        ResponseEntity<?> responseEntity = orderController.getListItemOrderOfOrder(orderId, 1);
+
+        // Verify
+        assertNotNull(responseEntity);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertInstanceOf(PaginationItemOrderResponse.class, responseEntity.getBody());
+
+        PaginationItemOrderResponse response = (PaginationItemOrderResponse) responseEntity.getBody();
+        assertEquals(10, response.getPer_page());
+        assertEquals(2, response.getTotal_page());
+        assertEquals(20, response.getTotal_item());
+        assertEquals(10, response.getData().size());
+    }
+
+    @Test
+    public void getListItemOrderOfOrderHandlesException() {
+        int orderId = 1;
+        when(orderService.getOrderById(orderId)).thenThrow(new RuntimeException("Server error!"));
+
+        // Execute
+        ResponseEntity<?> responseEntity = orderController.getListItemOrderOfOrder(orderId, 1);
+
+        // Verify
+        assertNotNull(responseEntity);
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+        assertInstanceOf(MessageResponse.class, responseEntity.getBody());
+        MessageResponse messageResponse = (MessageResponse) responseEntity.getBody();
+        assertEquals("Lỗi server", messageResponse.getEM());
+        assertEquals(-2, messageResponse.getEC());
     }
 
     @Test

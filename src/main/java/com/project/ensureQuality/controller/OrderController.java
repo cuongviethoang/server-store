@@ -119,16 +119,13 @@ public class OrderController {
     public Order getOrderById(@PathVariable("order_id") int order_id){
         return orderService.getOrderById(order_id);
     }
-    @GetMapping("/order/test")
-    public String getTest(){
-        return "siiuuu";
-    }
+
 
     @GetMapping("/order/list-item-order/{orderId}")
     public ResponseEntity<?> getListItemOrderOfOrder(@PathVariable(value = "orderId") int orderId, @RequestParam int limit) {
         try {
 //            PaginationItemOrderResponse paginationItemOrderResponse = orderService.getAllItemOrderOfOrder(orderId, currentPage);
-            Order order = orderRepository.findById(orderId).get();
+            Order order = orderService.getOrderById(orderId);
             List<ItemOrderResponse> itemOrders = getItemOrderResponse(order.getItemOrders());
             PaginationItemOrderResponse paginationItemOrderResponse = new PaginationItemOrderResponse();
             paginationItemOrderResponse.setTotal_item(itemOrders.size());

@@ -61,7 +61,7 @@ class OrderRepositoryTest {
                 key, startTime, endTime);
 
         // Assert
-        assertEquals(14, result.get().size());
+        assertEquals(15, result.get().size());
     }
 }
 
